@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Payment | Lakshmi Narayana Travels</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/customer-style.css}">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg lnt-navbar">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-3" th:href="@{/}">
+        <div class="brand-badge"><i class="fas fa-car-side fa-lg"></i></div>
+        <div>
+          <div class="brand-title">LAKSHMI NARAYANA</div>
+          <div class="brand-subtitle">TRAVELS &bull; CAR RENTALS</div>
+        </div>
+      </a>
+      <span class="badge bg-success-subtle text-success border border-success fw-bold px-3 py-2">
+        <i class="fas fa-shield-alt me-1"></i> 256-Bit SSL Encrypted Checkout
+      </span>
+    </div>
+  </nav>
+
+  <div class="container py-5">
+    <div class="row g-4 justify-content-center">
+      <div class="col-lg-8">
+        <!-- Order Header -->
+        <div class="card p-4 border-0 shadow-sm rounded-4 mb-4 bg-white">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+              <span class="badge bg-primary text-uppercase px-3 py-1 mb-2">Booking ID: <span th:text="${booking.id}">LNT-BK-2026-101</span></span>
+              <h4 class="fw-bold mb-0">Total Amount Due: <span class="text-primary">₹<span th:text="${#numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 2, 'POINT')}">8,729.64</span></span></h4>
+            </div>
+            <div class="text-end">
+              <div class="small text-muted">Vehicle Reserved:</div>
+              <div class="fw-bold text-dark" th:text="${booking.carName}">Toyota Innova Crysta</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Method Tabs -->
+        <div class="card p-4 border-0 shadow-md rounded-4 bg-white">
+          <h5 class="fw-bold mb-4"><i class="fas fa-wallet text-primary me-2"></i> Select Payment Option</h5>
+
+          <ul class="nav nav-pills nav-fill mb-4 bg-light p-2 rounded-3" id="paymentTabs" role="tablist">
+            <li class="nav-item">
+              <button class="nav-link active fw-bold py-2" id="upi-tab" data-bs-toggle="pill" data-bs-target="#upi-pane">
+                <i class="fas fa-qrcode me-1"></i> Instant UPI
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link fw-bold py-2" id="card-tab" data-bs-toggle="pill" data-bs-target="#card-pane">
+                <i class="fas fa-credit-card me-1"></i> Debit / Credit Card
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link fw-bold py-2" id="netbanking-tab" data-bs-toggle="pill" data-bs-target="#netbanking-pane">
+                <i class="fas fa-university me-1"></i> Net Banking
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link fw-bold py-2" id="cod-tab" data-bs-toggle="pill" data-bs-target="#cod-pane">
+                <i class="fas fa-hand-holding-usd me-1"></i> Pay at Pickup
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content" id="paymentTabContent">
+            <!-- TAB 1: UPI -->
+            <div class="tab-pane fade show active text-center py-3" id="upi-pane">
+              <div class="qr-container mb-3">
+                <!-- Realistic SVG QR Code -->
+                <svg width="180" height="180" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="#0f172a" d="M10,10 h30 v30 h-30 z M15,15 v20 h20 v-20 z M22,22 h6 v6 h-6 z M60,10 h30 v30 h-30 z M65,15 v20 h20 v-20 z M72,22 h6 v6 h-6 z M10,60 h30 v30 h-30 z M15,65 v20 h20 v-20 z M22,72 h6 v6 h-6 z M45,15 h5 v10 h-5 z M45,35 h10 v5 h-10 z M60,45 h10 v10 h-10 z M75,45 h15 v5 h-15 z M45,60 h5 v15 h-5 z M55,60 h10 v5 h-10 z M70,60 h20 v5 h-20 z M50,80 h15 v10 h-15 z M75,75 h15 v15 h-15 z"/>
+                </svg>
+              </div>
+              <h6 class="fw-bold mb-1">Scan QR via Google Pay, PhonePe, Paytm, or BHIM</h6>
+              <div class="small text-muted mb-3">UPI ID: <span class="fw-bold text-dark">lntravels@icici</span></div>
+
+              <form th:action="@{/payment/process}" method="post">
+                <input type="hidden" name="bookingId" th:value="${booking.id}">
+                <input type="hidden" name="paymentMethod" value="UPI (Google Pay / PhonePe)">
+                <input type="hidden" name="transactionRef" value="UPI/308129482910/LNT">
+                <button type="submit" class="btn btn-success btn-lg px-5 fw-bold shadow-sm">
+                  <i class="fas fa-check-circle me-2"></i> I Have Completed the UPI Payment
+                </button>
+              </form>
+            </div>
+
+            <!-- TAB 2: CREDIT / DEBIT CARD -->
+            <div class="tab-pane fade py-3" id="card-pane">
+              <!-- Live 3D Interactive Card Preview -->
+              <div class="credit-card-preview">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="small fw-bold">Lakshmi Narayana Travels</span>
+                  <i class="fab fa-cc-visa fa-2x"></i>
+                </div>
+                <div class="chip-img"></div>
+                <div class="card-number-display" id="cardDisplayNumber">&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;</div>
+                <div class="card-meta-row">
+                  <div>
+                    <span class="text-white-50" style="font-size: 0.65rem;">Card Holder</span>
+                    <div id="cardDisplayName" class="fw-bold" th:text="${booking.customerName}">YOUR NAME</div>
+                  </div>
+                  <div>
+                    <span class="text-white-50" style="font-size: 0.65rem;">Expires</span>
+                    <div id="cardDisplayExpiry" class="fw-bold">MM/YY</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card form -->
+              <form th:action="@{/payment/process}" method="post" class="row g-3">
+                <input type="hidden" name="bookingId" th:value="${booking.id}">
+                <input type="hidden" name="paymentMethod" value="Credit/Debit Card (Visa/Mastercard)">
+
+                <div class="col-md-12">
+                  <label class="form-label small fw-bold text-muted">Card Number</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="fas fa-credit-card text-primary"></i></span>
+                    <input type="text" class="form-control" id="cardNumberInput" placeholder="4532 8921 7842 1098" maxlength="19" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold text-muted">Cardholder Full Name</label>
+                  <input type="text" class="form-control" id="cardNameInput" th:value="${booking.customerName}" required>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label small fw-bold text-muted">Expiry Date</label>
+                  <input type="text" class="form-control" id="cardExpiryInput" placeholder="12/28" maxlength="5" required>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label small fw-bold text-muted">CVV / CVC</label>
+                  <input type="password" class="form-control" placeholder="123" maxlength="3" required>
+                </div>
+                <div class="col-12 mt-4">
+                  <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm">
+                    <i class="fas fa-lock me-2"></i> Pay ₹<span th:text="${#numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 2, 'POINT')}">8,729.64</span> Securely
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- TAB 3: NET BANKING -->
+            <div class="tab-pane fade py-3" id="netbanking-pane">
+              <form th:action="@{/payment/process}" method="post">
+                <input type="hidden" name="bookingId" th:value="${booking.id}">
+                <input type="hidden" name="paymentMethod" value="Net Banking">
+
+                <div class="row g-3 mb-4">
+                  <div class="col-4">
+                    <label class="border rounded-3 p-3 w-100 text-center cursor-pointer bg-light">
+                      <input type="radio" name="bank" value="HDFC" checked class="me-1">
+                      <div class="fw-bold mt-1">HDFC Bank</div>
+                    </label>
+                  </div>
+                  <div class="col-4">
+                    <label class="border rounded-3 p-3 w-100 text-center cursor-pointer bg-light">
+                      <input type="radio" name="bank" value="SBI" class="me-1">
+                      <div class="fw-bold mt-1">State Bank of India</div>
+                    </label>
+                  </div>
+                  <div class="col-4">
+                    <label class="border rounded-3 p-3 w-100 text-center cursor-pointer bg-light">
+                      <input type="radio" name="bank" value="ICICI" class="me-1">
+                      <div class="fw-bold mt-1">ICICI Bank</div>
+                    </label>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm">
+                  Proceed to Bank Gateway
+                </button>
+              </form>
+            </div>
+
+            <!-- TAB 4: PAY AT PICKUP -->
+            <div class="tab-pane fade py-3 text-center" id="cod-pane">
+              <div class="p-4 bg-light rounded-4 mb-3 border">
+                <i class="fas fa-handshake fa-3x text-primary mb-3"></i>
+                <h5 class="fw-bold">Pay at Car Handover</h5>
+                <p class="text-muted small mb-0">
+                  You can pay the full amount of ₹<span th:text="${#numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 2, 'POINT')}">8,729.64</span> via Cash, Card Swipe Machine, or UPI directly to our delivery executive when the car arrives at your pickup location.
+                </p>
+              </div>
+
+              <form th:action="@{/payment/process}" method="post">
+                <input type="hidden" name="bookingId" th:value="${booking.id}">
+                <input type="hidden" name="paymentMethod" value="Pay at Pickup (Cash / Card Swipe)">
+                <input type="hidden" name="transactionRef" value="PAY-ON-DELIVERY">
+                <button type="submit" class="btn btn-warning btn-lg px-5 fw-bold shadow-sm text-dark">
+                  <i class="fas fa-check me-2"></i> Confirm Booking with Pay at Pickup
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-dark text-white py-4 mt-5 text-center small text-secondary">
+    &copy; 2026 Lakshmi Narayana Travels. All Rights Reserved.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script th:src="@{/js/customer-script.js}"></script>
+</body>
+</html>
+

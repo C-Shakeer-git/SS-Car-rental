@@ -1,0 +1,371 @@
+/* Lakshmi Narayana Travels - Customer Portal Modern Light Theme */
+:root {
+  --primary: #1e3a8a;
+  --primary-light: #3b82f6;
+  --primary-subtle: #eff6ff;
+  --secondary: #0f172a;
+  --accent: #d97706;
+  --accent-light: #f59e0b;
+  --accent-soft: #fef3c7;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg-light: #f8fafc;
+  --card-bg: #ffffff;
+  --border-color: #e2e8f0;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --radius-lg: 16px;
+  --radius-md: 10px;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 35px -10px rgba(15, 23, 42, 0.12);
+  --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-light);
+  color: var(--text-main);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Glassmorphism Navigation */
+.lnt-navbar {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.brand-badge {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
+}
+
+.brand-title {
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.brand-subtitle {
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Hero Section */
+.hero-wrapper {
+  position: relative;
+  background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+  padding: 60px 0 80px 0;
+  overflow: hidden;
+}
+
+.hero-shape-1 {
+  position: absolute;
+  top: -100px;
+  right: -50px;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.hero-shape-2 {
+  position: absolute;
+  bottom: 0;
+  left: -80px;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(217, 119, 6, 0.1) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+/* Floating animation */
+@keyframes floatAnimation {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(1deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.floating-hero-car {
+  animation: floatAnimation 6s ease-in-out infinite;
+  filter: drop-shadow(0 25px 25px rgba(15, 23, 42, 0.18));
+  max-height: 360px;
+  width: auto;
+}
+
+/* Search Bar & Quick Filters Widget */
+.search-card-float {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  padding: 24px;
+  margin-top: -45px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Car Fleet Cards */
+.car-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.car-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  border-color: #cbd5e1;
+}
+
+.car-card-image-wrap {
+  position: relative;
+  overflow: hidden;
+  height: 210px;
+  background: #f1f5f9;
+}
+
+.car-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.car-card:hover .car-card-img {
+  transform: scale(1.06);
+}
+
+.badge-seater {
+  background: rgba(15, 23, 42, 0.85);
+  color: #fff;
+  font-size: 0.75rem;
+  backdrop-filter: blur(4px);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.badge-fuel-cng {
+  background: #059669;
+  color: white;
+  font-weight: 700;
+}
+
+.badge-fuel-diesel {
+  background: #0284c7;
+  color: white;
+  font-weight: 700;
+}
+
+.badge-fuel-petrol {
+  background: #ea580c;
+  color: white;
+  font-weight: 700;
+}
+
+.badge-fuel-ev {
+  background: #7c3aed;
+  color: white;
+  font-weight: 700;
+}
+
+.car-feature-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  background: var(--bg-light);
+  color: var(--text-muted);
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+  font-weight: 500;
+}
+
+.price-tag {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.price-tag span {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* Interactive Car Part Explorer */
+.car-parts-explorer {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  padding: 32px;
+  box-shadow: var(--shadow-md);
+  margin-top: 40px;
+}
+
+.car-diagram-stage {
+  position: relative;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border-radius: var(--radius-md);
+  padding: 40px 20px;
+  min-height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.car-diagram-car-img {
+  max-width: 90%;
+  max-height: 280px;
+  object-fit: contain;
+  transition: all 0.4s ease;
+  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.4));
+}
+
+/* Hotspots */
+.car-hotspot {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 2px solid #f59e0b;
+  z-index: 5;
+}
+
+.car-hotspot::after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #f59e0b;
+}
+
+.car-hotspot:hover, .car-hotspot.active {
+  transform: scale(1.35);
+  background: rgba(245, 158, 11, 0.6);
+  box-shadow: 0 0 20px #f59e0b;
+}
+
+/* Part detail card */
+.part-detail-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+/* Interactive Payment Credit Card 3D Flip */
+.credit-card-preview {
+  width: 100%;
+  max-width: 380px;
+  height: 220px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #1e40af 100%);
+  color: white;
+  padding: 25px;
+  position: relative;
+  box-shadow: 0 20px 35px -10px rgba(30, 58, 138, 0.4);
+  margin: 0 auto 30px auto;
+  perspective: 1000px;
+}
+
+.chip-img {
+  width: 48px;
+  height: 36px;
+  background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+  border-radius: 6px;
+  margin-bottom: 25px;
+}
+
+.card-number-display {
+  font-family: monospace;
+  font-size: 1.35rem;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.card-meta-row {
+  display: flex;
+  justify-content: space-between;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+}
+
+/* UPI QR Code Container */
+.qr-container {
+  background: white;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border: 2px dashed #cbd5e1;
+  display: inline-block;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Invoice Specific */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
+  .invoice-card {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
+
+.invoice-badge-paid {
+  border: 2px solid #10b981;
+  color: #10b981;
+  padding: 6px 18px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transform: rotate(-10deg);
+  display: inline-block;
+  border-radius: 8px;
+}
+

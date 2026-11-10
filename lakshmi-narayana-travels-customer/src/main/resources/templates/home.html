@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lakshmi Narayana Travels | Premium Car Rentals & Outstation Journeys</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/customer-style.css}">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-primary text-white py-2 px-3 text-center small fw-semibold">
+    <i class="fas fa-sparkles text-warning me-2"></i> Festive Season Offer: Enjoy Flat 15% OFF on 7-Seater MUVs &amp; SUVs with Code <span class="badge bg-warning text-dark">LNTFEST15</span> | 24/7 Roadside Assistance
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg lnt-navbar sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-3" th:href="@{/}">
+        <div class="brand-badge">
+          <i class="fas fa-car-side fa-lg"></i>
+        </div>
+        <div>
+          <div class="brand-title">LAKSHMI NARAYANA</div>
+          <div class="brand-subtitle">TRAVELS &bull; CAR RENTALS</div>
+        </div>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navContent">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold">
+          <li class="nav-item"><a class="nav-link active text-primary" th:href="@{/}"><i class="fas fa-home me-1"></i> Home</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/cars}"><i class="fas fa-car me-1"></i> Fleet &amp; Cars</a></li>
+          <li class="nav-item"><a class="nav-link" href="#carExplorer"><i class="fas fa-cogs me-1"></i> Car Anatomy</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/my-bookings}"><i class="fas fa-calendar-check me-1"></i> My Bookings</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-2">
+          <div th:if="${session.customer != null}" class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle fw-bold d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
+              <i class="fas fa-user-circle fa-lg"></i>
+              <span th:text="${session.customer.fullName}">User</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+              <li><a class="dropdown-item py-2" th:href="@{/profile}"><i class="fas fa-id-card text-primary me-2"></i> Profile &amp; KYC Proofs</a></li>
+              <li><a class="dropdown-item py-2" th:href="@{/my-bookings}"><i class="fas fa-route text-success me-2"></i> My Bookings</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item py-2 text-danger" th:href="@{/logout}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+            </ul>
+          </div>
+          <div th:if="${session.customer == null}" class="d-flex gap-2">
+            <a th:href="@{/login}" class="btn btn-outline-primary px-3 fw-bold"><i class="fas fa-sign-in-alt me-1"></i> Login</a>
+            <a th:href="@{/register}" class="btn btn-primary px-3 fw-bold"><i class="fas fa-user-plus me-1"></i> Register</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Alerts -->
+  <div class="container mt-3" th:if="${successMessage}">
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+      <i class="fas fa-check-circle me-2"></i> <span th:text="${successMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  </div>
+  <div class="container mt-3" th:if="${errorMessage}">
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i> <span th:text="${errorMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  </div>
+
+  <!-- Hero Section with Smooth Floating Car & Visual Shapes -->
+  <section class="hero-wrapper">
+    <div class="hero-shape-1"></div>
+    <div class="hero-shape-2"></div>
+    <div class="container">
+      <div class="row align-items-center gy-5">
+        <div class="col-lg-6">
+          <div class="d-inline-flex align-items-center gap-2 px-3 py-1 bg-white border rounded-pill shadow-sm mb-3">
+            <span class="badge bg-warning text-dark"><i class="fas fa-award"></i> Verified Fleet</span>
+            <span class="small fw-bold text-muted">100% Sanitized &bull; Zero Security Deposit Options</span>
+          </div>
+          <h1 class="display-4 fw-extrabold text-navy lh-sm mb-3">
+            Experience Seamless Travel with <span class="text-primary">Lakshmi Narayana</span> Travels
+          </h1>
+          <p class="lead text-muted mb-4">
+            Rent luxury SUVs, spacious 7-seater family MUVs, and high-mileage CNG sedans for local city commutes and outstation family vacations. Simple booking, transparent pricing, and instant invoices.
+          </p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="#fleetSection" class="btn btn-primary btn-lg px-4 py-3 fw-bold shadow-sm">
+              <i class="fas fa-car me-2"></i> Explore Cars (<span th:text="${totalCars}">9</span> Available)
+            </a>
+            <a href="#carExplorer" class="btn btn-outline-secondary btn-lg px-4 py-3 fw-bold">
+              <i class="fas fa-layer-group me-2"></i> Interactive Car Parts
+            </a>
+          </div>
+          <div class="row g-3 mt-4 pt-3 border-top">
+            <div class="col-4">
+              <div class="h3 fw-bold text-primary mb-0" th:text="${sevenSeaterCount} + '+'">4+</div>
+              <div class="small text-muted fw-semibold">7-Seater MUVs</div>
+            </div>
+            <div class="col-4">
+              <div class="h3 fw-bold text-success mb-0" th:text="${cngCount} + '+'">2+</div>
+              <div class="small text-muted fw-semibold">CNG High Mileage</div>
+            </div>
+            <div class="col-4">
+              <div class="h3 fw-bold text-warning mb-0">4.9 ★</div>
+              <div class="small text-muted fw-semibold">Customer Rating</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 text-center position-relative">
+          <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80" 
+               alt="Lakshmi Narayana Travels Innova Crysta" 
+               class="floating-hero-car img-fluid rounded-4 shadow">
+          <div class="position-absolute bottom-0 start-0 bg-white p-3 rounded-3 shadow border text-start d-none d-md-flex align-items-center gap-3">
+            <div class="bg-success text-white p-2 rounded-circle">
+              <i class="fas fa-shield-alt fa-lg"></i>
+            </div>
+            <div>
+              <div class="fw-bold small">Fully Insured &amp; GPS Tracked</div>
+              <div class="text-muted" style="font-size: 0.75rem;">Safety first on all state highways</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Search & Booking Filter Box -->
+  <div class="container">
+    <div class="search-card-float">
+      <form th:action="@{/cars}" method="get" class="row g-3 align-items-end">
+        <div class="col-lg-3 col-md-6">
+          <label class="form-label fw-bold small text-muted"><i class="fas fa-users text-primary me-1"></i> Seating Capacity</label>
+          <select class="form-select py-2" name="seaters">
+            <option value="">All Seaters (5 &amp; 7)</option>
+            <option value="5">5 Seater (Sedan / Compact SUV)</option>
+            <option value="7">7 Seater (Family MUV / Full SUV)</option>
+          </select>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <label class="form-label fw-bold small text-muted"><i class="fas fa-gas-pump text-success me-1"></i> Fuel Type</label>
+          <select class="form-select py-2" name="fuel">
+            <option value="">All Fuel Types</option>
+            <option value="Petrol">Petrol</option>
+            <option value="Diesel">Diesel Power</option>
+            <option value="CNG">CNG (High Mileage)</option>
+            <option value="Electric">Electric (EV)</option>
+          </select>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <label class="form-label fw-bold small text-muted"><i class="fas fa-cogs text-warning me-1"></i> Transmission</label>
+          <select class="form-select py-2" name="transmission">
+            <option value="">Manual &amp; Automatic</option>
+            <option value="Manual">Manual</option>
+            <option value="Automatic">Automatic</option>
+          </select>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <button type="submit" class="btn btn-primary w-100 py-2 fw-bold d-flex align-items-center justify-content-center gap-2">
+            <i class="fas fa-search"></i> Search Available Cars
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- All Cars Showcase Section -->
+  <section id="fleetSection" class="py-5 mt-4">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-end mb-4">
+        <div>
+          <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase px-3 py-1 mb-2">Our Premium Fleet</span>
+          <h2 class="fw-bold mb-0">Choose Your Favorite Car for Your Journey</h2>
+        </div>
+        <div class="d-flex gap-2 mt-3 mt-md-0">
+          <a th:href="@{/cars}" class="btn btn-outline-primary fw-bold">View Fleet Catalog <i class="fas fa-arrow-right ms-1"></i></a>
+        </div>
+      </div>
+
+      <!-- Quick Filter Pills -->
+      <div class="d-flex flex-wrap gap-2 mb-4">
+        <a th:href="@{/cars}" class="btn btn-sm btn-outline-dark active rounded-pill px-3">All Fleet (<span th:text="${cars.size()}"></span>)</a>
+        <a th:href="@{/cars(seaters=7)}" class="btn btn-sm btn-outline-dark rounded-pill px-3"><i class="fas fa-users me-1"></i> 7-Seater Family</a>
+        <a th:href="@{/cars(seaters=5)}" class="btn btn-sm btn-outline-dark rounded-pill px-3"><i class="fas fa-user-friends me-1"></i> 5-Seater Sedans &amp; SUVs</a>
+        <a th:href="@{/cars(fuel='CNG')}" class="btn btn-sm btn-outline-success rounded-pill px-3"><i class="fas fa-leaf me-1"></i> Super Economy CNG</a>
+        <a th:href="@{/cars(fuel='Diesel')}" class="btn btn-sm btn-outline-primary rounded-pill px-3"><i class="fas fa-oil-can me-1"></i> Diesel Power</a>
+        <a th:href="@{/cars(fuel='Electric')}" class="btn btn-sm btn-outline-secondary rounded-pill px-3"><i class="fas fa-bolt me-1"></i> EV Max</a>
+      </div>
+
+      <!-- Cars Grid -->
+      <div class="row g-4">
+        <div th:each="car : ${cars}" class="col-lg-4 col-md-6 car-item-card"
+             th:data-fuel="${car.fuelType}"
+             th:data-seaters="${car.seaters}"
+             th:data-trans="${car.transmission}"
+             th:data-price="${car.pricePerDay}">
+          <div class="car-card h-100 tilt-card">
+            <div class="car-card-image-wrap">
+              <img th:src="${car.imageUrl}" th:alt="${car.name}" class="car-card-img">
+              <div class="position-absolute top-0 start-0 m-3 d-flex flex-column gap-1">
+                <span class="badge-seater"><i class="fas fa-users me-1"></i> <span th:text="${car.seaters}"></span> Seater</span>
+                <span th:if="${car.fuelType == 'CNG'}" class="badge badge-fuel-cng"><i class="fas fa-leaf me-1"></i> CNG</span>
+                <span th:if="${car.fuelType == 'Diesel'}" class="badge badge-fuel-diesel"><i class="fas fa-oil-can me-1"></i> Diesel</span>
+                <span th:if="${car.fuelType == 'Petrol'}" class="badge badge-fuel-petrol"><i class="fas fa-gas-pump me-1"></i> Petrol</span>
+                <span th:if="${car.fuelType == 'Electric'}" class="badge badge-fuel-ev"><i class="fas fa-bolt me-1"></i> Electric</span>
+              </div>
+              <div class="position-absolute top-0 end-0 m-3">
+                <span class="badge bg-white text-dark fw-bold shadow-sm px-2 py-1">
+                  <i class="fas fa-star text-warning"></i> <span th:text="${car.rating}">4.9</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="p-4 d-flex flex-column flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <div class="text-muted small fw-semibold text-uppercase" th:text="${car.brand}">Brand</div>
+                  <h5 class="fw-bold mb-0" th:text="${car.name}">Car Name</h5>
+                </div>
+                <span class="badge bg-light text-muted border" th:text="${car.category}">Category</span>
+              </div>
+
+              <!-- Quick specs -->
+              <div class="d-flex justify-content-between py-2 border-top border-bottom my-3 small text-muted">
+                <span><i class="fas fa-cogs text-primary me-1"></i> <span th:text="${car.transmission}">Manual</span></span>
+                <span><i class="fas fa-tachometer-alt text-success me-1"></i> <span th:text="${car.mileage}">16 km/l</span></span>
+                <span><i class="fas fa-suitcase text-warning me-1"></i> <span th:text="${car.luggageCapacity}">3</span> Bags</span>
+              </div>
+
+              <!-- Feature Pills -->
+              <div class="mb-3 d-flex flex-wrap gap-1">
+                <span th:each="feat, stat : ${car.features}" th:if="${stat.index < 3}" class="car-feature-pill">
+                  <i class="fas fa-check-circle text-primary"></i> <span th:text="${feat}">Feature</span>
+                </span>
+              </div>
+
+              <!-- Price & Book Button -->
+              <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
+                <div>
+                  <div class="price-tag">₹<span th:text="${#numbers.formatDecimal(car.pricePerDay, 0, 'COMMA', 0, 'POINT')}">2,500</span> <span>/day</span></div>
+                  <div class="small text-success fw-semibold"><i class="fas fa-shield-alt"></i> Zero Hidden Fees</div>
+                </div>
+                <div class="d-flex gap-2">
+                  <a th:href="@{'/car/' + ${car.id}}" class="btn btn-outline-secondary btn-sm px-3" title="View Specifications">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a th:href="@{'/book/' + ${car.id}}" class="btn btn-primary px-4 fw-bold">
+                    Book Now <i class="fas fa-arrow-right ms-1"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Car Parts & Anatomy Showcase Section -->
+  <section id="carExplorer" class="py-5 bg-white border-top border-bottom">
+    <div class="container">
+      <div class="text-center max-w-xl mx-auto mb-5">
+        <span class="badge bg-warning-subtle text-warning fw-bold text-uppercase px-3 py-1 mb-2">Engineering &amp; Anatomy</span>
+        <h2 class="display-6 fw-bold">Interactive Car Parts &amp; Safety Design</h2>
+        <p class="text-muted">Click any pulsing hotspot on the vehicle to explore how Lakshmi Narayana Travels maintains each mechanical system to absolute peak highway safety standards.</p>
+      </div>
+
+      <div class="car-parts-explorer">
+        <div class="row g-4 align-items-center">
+          <div class="col-lg-7">
+            <div class="car-diagram-stage">
+              <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80" 
+                   alt="Car Anatomy Diagram" 
+                   class="car-diagram-car-img" id="anatomyCarImg">
+
+              <!-- Hotspot 1: Engine -->
+              <div class="car-hotspot active" style="top: 50%; left: 16%;" data-part="engine" title="Engine & Powertrain"></div>
+              <!-- Hotspot 2: Chassis -->
+              <div class="car-hotspot" style="top: 30%; left: 45%;" data-part="chassis" title="High-Tensile Chassis"></div>
+              <!-- Hotspot 3: Wheels & Brakes -->
+              <div class="car-hotspot" style="top: 72%; left: 24%;" data-part="wheels" title="Brakes & Alloys"></div>
+              <!-- Hotspot 4: Luxury Interior -->
+              <div class="car-hotspot" style="top: 42%; left: 58%;" data-part="interior" title="Cabin & Climate Control"></div>
+              <!-- Hotspot 5: Safety Airbags -->
+              <div class="car-hotspot" style="top: 38%; left: 32%;" data-part="safety" title="6 Airbags & Safety"></div>
+              <!-- Hotspot 6: Luggage Boot -->
+              <div class="car-hotspot" style="top: 48%; right: 12%;" data-part="boot" title="Luggage Boot Utility"></div>
+            </div>
+            <div class="text-center small text-muted mt-2">
+              <i class="fas fa-hand-pointer text-warning me-1"></i> Click on any glowing orange circle to inspect component specs
+            </div>
+          </div>
+
+          <div class="col-lg-5">
+            <div class="part-detail-box">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge bg-primary" id="partBadge">High Performance &amp; Efficiency</span>
+                <span class="badge bg-light text-muted border">Inspected Every 5,000 KM</span>
+              </div>
+              <h4 class="fw-bold mb-3" id="partTitle">Smart BS6 Phase 2 Engine &amp; Powertrain</h4>
+              <p class="text-muted" id="partDesc">
+                Refined multi-valve turbo petrol, torque-rich diesel, and factory-fitted smart CNG powertrains engineered for seamless hill climbs and high-speed highway cruising with zero vibration.
+              </p>
+              <div class="mt-3">
+                <h6 class="fw-bold small text-uppercase text-muted mb-2">Key Technical Capabilities:</h6>
+                <ul class="list-unstyled mb-0" id="partSpecs">
+                  <li class="d-flex align-items-center mb-2"><i class="fas fa-check-circle text-success me-2"></i> BS6 RDE Compliant</li>
+                  <li class="d-flex align-items-center mb-2"><i class="fas fa-check-circle text-success me-2"></i> Eco, City &amp; Sport Power Modes</li>
+                  <li class="d-flex align-items-center mb-2"><i class="fas fa-check-circle text-success me-2"></i> Quick Response Turbo Boost</li>
+                  <li class="d-flex align-items-center mb-2"><i class="fas fa-check-circle text-success me-2"></i> Smart Stop/Start Idle Technology</li>
+                </ul>
+              </div>
+              <div class="mt-4 pt-3 border-top d-flex gap-2">
+                <a th:href="@{/cars}" class="btn btn-primary fw-bold flex-grow-1">
+                  <i class="fas fa-car me-1"></i> Rent This Fleet
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Lakshmi Narayana Travels -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <div class="text-center max-w-xl mx-auto mb-5">
+        <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase px-3 py-1 mb-2">The LNT Advantage</span>
+        <h2 class="display-6 fw-bold">Why South India Trusts Lakshmi Narayana Travels</h2>
+        <p class="text-muted">Thousands of families, corporate teams, and pilgrim travelers count on our reliability every single day.</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card h-100 p-4 border-0 shadow-sm rounded-4">
+            <div class="brand-badge mb-3 bg-primary">
+              <i class="fas fa-shield-check fa-lg"></i>
+            </div>
+            <h5 class="fw-bold">100% Verified Documents</h5>
+            <p class="text-muted">Simple digital KYC with Aadhaar &amp; Driving Licence upload. No bulky physical paperwork or delays at vehicle handover.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 p-4 border-0 shadow-sm rounded-4">
+            <div class="brand-badge mb-3 bg-success">
+              <i class="fas fa-tools fa-lg"></i>
+            </div>
+            <h5 class="fw-bold">24x7 On-Road Assistance</h5>
+            <p class="text-muted">Travel with zero anxiety across Telangana, Andhra Pradesh, and Karnataka with our dedicated 24/7 highway support network.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 p-4 border-0 shadow-sm rounded-4">
+            <div class="brand-badge mb-3 bg-warning">
+              <i class="fas fa-file-invoice-dollar fa-lg text-dark"></i>
+            </div>
+            <h5 class="fw-bold">Instant GST Tax Invoices</h5>
+            <p class="text-muted">Transparent pricing with zero hidden charges. Instant downloadable GST tax invoices for business reimbursement and tax filings.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white pt-5 pb-4 mt-5">
+    <div class="container">
+      <div class="row g-4 mb-4">
+        <div class="col-lg-4">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="brand-badge bg-warning text-dark">
+              <i class="fas fa-car-side fa-lg"></i>
+            </div>
+            <div>
+              <h5 class="fw-bold mb-0 text-white">Lakshmi Narayana Travels</h5>
+              <div class="small text-warning">South India's Trusted Car Rental Network</div>
+            </div>
+          </div>
+          <p class="text-secondary small">
+            Providing modern, reliable, and affordable self-drive &amp; chauffeur-driven car rentals for outstation trips, family pilgrimages, and local commutes.
+          </p>
+          <div class="d-flex gap-3 text-secondary">
+            <a href="#" class="text-secondary"><i class="fab fa-facebook fa-lg"></i></a>
+            <a href="#" class="text-secondary"><i class="fab fa-instagram fa-lg"></i></a>
+            <a href="#" class="text-secondary"><i class="fab fa-whatsapp fa-lg"></i></a>
+            <a href="#" class="text-secondary"><i class="fab fa-youtube fa-lg"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-4">
+          <h6 class="fw-bold text-white mb-3">Fleet Categories</h6>
+          <ul class="list-unstyled small text-secondary">
+            <li class="mb-2"><a th:href="@{/cars(seaters=7)}" class="text-decoration-none text-secondary">7-Seater Innova / MUVs</a></li>
+            <li class="mb-2"><a th:href="@{/cars(fuel='CNG')}" class="text-decoration-none text-secondary">Super Economy CNG</a></li>
+            <li class="mb-2"><a th:href="@{/cars(category='SUV')}" class="text-decoration-none text-secondary">4x4 Thar &amp; Creta SUVs</a></li>
+            <li class="mb-2"><a th:href="@{/cars(category='Sedan')}" class="text-decoration-none text-secondary">Executive Sedans</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-md-4">
+          <h6 class="fw-bold text-white mb-3">Customer Support</h6>
+          <ul class="list-unstyled small text-secondary">
+            <li class="mb-2"><i class="fas fa-phone-alt me-2 text-warning"></i> +91 98480 22338 / +91 98765 43210</li>
+            <li class="mb-2"><i class="fas fa-envelope me-2 text-warning"></i> reservations@lntravels.com</li>
+            <li class="mb-2"><i class="fas fa-map-marker-alt me-2 text-warning"></i> Hubs in Hyderabad, Vijayawada &amp; Bengaluru</li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-md-4">
+          <h6 class="fw-bold text-white mb-3">Staff &amp; Admin</h6>
+          <p class="small text-secondary">Staff and fleet administrators can access the operations management console on port 8082.</p>
+          <a href="http://localhost:8082/login" target="_blank" class="btn btn-outline-warning btn-sm fw-bold">
+            <i class="fas fa-user-shield me-1"></i> Admin Portal (Port 8082)
+          </a>
+        </div>
+      </div>
+      <div class="text-center pt-3 border-top border-secondary small text-secondary">
+        &copy; 2026 Lakshmi Narayana Travels. All Rights Reserved. Built with Spring Boot &amp; Google Sheets Data Engine.
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script th:src="@{/js/customer-script.js}"></script>
+</body>
+</html>
+

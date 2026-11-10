@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fleet &amp; Cars | Lakshmi Narayana Travels</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/customer-style.css}">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg lnt-navbar sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-3" th:href="@{/}">
+        <div class="brand-badge">
+          <i class="fas fa-car-side fa-lg"></i>
+        </div>
+        <div>
+          <div class="brand-title">LAKSHMI NARAYANA</div>
+          <div class="brand-subtitle">TRAVELS &bull; CAR RENTALS</div>
+        </div>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navContent">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold">
+          <li class="nav-item"><a class="nav-link" th:href="@{/}"><i class="fas fa-home me-1"></i> Home</a></li>
+          <li class="nav-item"><a class="nav-link active text-primary" th:href="@{/cars}"><i class="fas fa-car me-1"></i> Fleet &amp; Cars</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/my-bookings}"><i class="fas fa-calendar-check me-1"></i> My Bookings</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-2">
+          <div th:if="${session.customer != null}" class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle fw-bold d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
+              <i class="fas fa-user-circle fa-lg"></i>
+              <span th:text="${session.customer.fullName}">User</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+              <li><a class="dropdown-item py-2" th:href="@{/profile}"><i class="fas fa-id-card text-primary me-2"></i> Profile &amp; KYC Proofs</a></li>
+              <li><a class="dropdown-item py-2" th:href="@{/my-bookings}"><i class="fas fa-route text-success me-2"></i> My Bookings</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item py-2 text-danger" th:href="@{/logout}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+            </ul>
+          </div>
+          <div th:if="${session.customer == null}" class="d-flex gap-2">
+            <a th:href="@{/login}" class="btn btn-outline-primary px-3 fw-bold">Login</a>
+            <a th:href="@{/register}" class="btn btn-primary px-3 fw-bold">Register</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb & Header -->
+  <div class="bg-light py-4 border-bottom">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <div>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1 small">
+              <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Fleet &amp; Cars</li>
+            </ol>
+          </nav>
+          <h2 class="fw-bold mb-0">Browse Car Fleet</h2>
+        </div>
+        <div class="text-muted small">
+          Showing <span class="fw-bold text-dark" th:text="${cars.size()}">9</span> verified vehicles ready for booking
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-5">
+    <div class="row g-4">
+      <!-- Filter Sidebar -->
+      <div class="col-lg-3">
+        <div class="card p-4 border-0 shadow-sm rounded-4 sticky-top" style="top: 90px; z-index: 10;">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0"><i class="fas fa-sliders-h text-primary me-2"></i> Filters</h5>
+            <a th:href="@{/cars}" class="small text-decoration-none text-muted fw-bold">Reset</a>
+          </div>
+
+          <form th:action="@{/cars}" method="get" id="serverFilterForm">
+            <!-- Seaters -->
+            <div class="mb-4">
+              <label class="form-label fw-bold small text-muted text-uppercase">Seating Capacity</label>
+              <select class="form-select" name="seaters" id="filterSeaters">
+                <option value="all" th:selected="${selectedSeaters == null}">All Seaters (5 &amp; 7)</option>
+                <option value="5" th:selected="${selectedSeaters == 5}">5 Seater (Sedans / Compact SUVs)</option>
+                <option value="7" th:selected="${selectedSeaters == 7}">7 Seater (Family MUVs / Big SUVs)</option>
+              </select>
+            </div>
+
+            <!-- Fuel Type -->
+            <div class="mb-4">
+              <label class="form-label fw-bold small text-muted text-uppercase">Fuel Type</label>
+              <select class="form-select" name="fuel" id="filterFuel">
+                <option value="all" th:selected="${selectedFuel == null || selectedFuel == 'ALL'}">All Fuel Types</option>
+                <option value="Petrol" th:selected="${selectedFuel == 'Petrol'}">Petrol</option>
+                <option value="Diesel" th:selected="${selectedFuel == 'Diesel'}">Diesel</option>
+                <option value="CNG" th:selected="${selectedFuel == 'CNG'}">CNG (High Mileage)</option>
+                <option value="Electric" th:selected="${selectedFuel == 'Electric'}">Electric (EV)</option>
+              </select>
+            </div>
+
+            <!-- Transmission -->
+            <div class="mb-4">
+              <label class="form-label fw-bold small text-muted text-uppercase">Transmission</label>
+              <select class="form-select" name="transmission" id="filterTransmission">
+                <option value="all" th:selected="${selectedTransmission == null || selectedTransmission == 'ALL'}">All Transmissions</option>
+                <option value="Manual" th:selected="${selectedTransmission == 'Manual'}">Manual</option>
+                <option value="Automatic" th:selected="${selectedTransmission == 'Automatic'}">Automatic</option>
+              </select>
+            </div>
+
+            <!-- Max Price Slider -->
+            <div class="mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <label class="form-label fw-bold small text-muted text-uppercase mb-0">Max Daily Rate</label>
+                <span class="fw-bold text-primary" id="priceDisplay">₹<span th:text="${#numbers.formatDecimal(selectedMaxPrice, 0, 'COMMA', 0, 'POINT')}">6,000</span></span>
+              </div>
+              <input type="range" class="form-range" min="1500" max="6000" step="200" 
+                     th:value="${selectedMaxPrice}" name="maxPrice" id="filterPrice">
+              <div class="d-flex justify-content-between text-muted" style="font-size: 0.75rem;">
+                <span>₹1,500</span>
+                <span>₹6,000</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 fw-bold py-2">
+              <i class="fas fa-filter me-1"></i> Apply Filter
+            </button>
+          </form>
+
+          <div class="mt-4 pt-3 border-top small text-muted">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <i class="fas fa-check-circle text-success"></i> Free Cancellation up to 6 hrs
+            </div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <i class="fas fa-check-circle text-success"></i> Full Tank Fuel Delivery
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <i class="fas fa-check-circle text-success"></i> 24/7 Roadside Breakdown Cover
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cars Fleet Listing -->
+      <div class="col-lg-9">
+        <div id="noResultsMsg" style="display: none;" class="text-center py-5 bg-white rounded-4 shadow-sm">
+          <i class="fas fa-car-crash fa-3x text-muted mb-3"></i>
+          <h4>No cars match your filter criteria</h4>
+          <p class="text-muted">Try clearing some filter options or reset to view our full fleet.</p>
+          <a th:href="@{/cars}" class="btn btn-outline-primary fw-bold">Reset Filters</a>
+        </div>
+
+        <div class="row g-4" id="carsGrid">
+          <div th:each="car : ${cars}" class="col-md-6 car-item-card"
+               th:data-fuel="${car.fuelType}"
+               th:data-seaters="${car.seaters}"
+               th:data-trans="${car.transmission}"
+               th:data-price="${car.pricePerDay}">
+            <div class="car-card h-100 tilt-card">
+              <div class="car-card-image-wrap">
+                <img th:src="${car.imageUrl}" th:alt="${car.name}" class="car-card-img">
+                <div class="position-absolute top-0 start-0 m-3 d-flex flex-column gap-1">
+                  <span class="badge-seater"><i class="fas fa-users me-1"></i> <span th:text="${car.seaters}"></span> Seater</span>
+                  <span th:if="${car.fuelType == 'CNG'}" class="badge badge-fuel-cng"><i class="fas fa-leaf me-1"></i> CNG</span>
+                  <span th:if="${car.fuelType == 'Diesel'}" class="badge badge-fuel-diesel"><i class="fas fa-oil-can me-1"></i> Diesel</span>
+                  <span th:if="${car.fuelType == 'Petrol'}" class="badge badge-fuel-petrol"><i class="fas fa-gas-pump me-1"></i> Petrol</span>
+                  <span th:if="${car.fuelType == 'Electric'}" class="badge badge-fuel-ev"><i class="fas fa-bolt me-1"></i> Electric</span>
+                </div>
+                <div class="position-absolute top-0 end-0 m-3">
+                  <span class="badge bg-white text-dark fw-bold shadow-sm px-2 py-1">
+                    <i class="fas fa-star text-warning"></i> <span th:text="${car.rating}">4.9</span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="p-4 d-flex flex-column flex-grow-1">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <div>
+                    <div class="text-muted small fw-semibold text-uppercase" th:text="${car.brand}">Brand</div>
+                    <h5 class="fw-bold mb-0" th:text="${car.name}">Car Name</h5>
+                  </div>
+                  <span class="badge bg-light text-muted border" th:text="${car.category}">Category</span>
+                </div>
+
+                <div class="d-flex justify-content-between py-2 border-top border-bottom my-3 small text-muted">
+                  <span><i class="fas fa-cogs text-primary me-1"></i> <span th:text="${car.transmission}">Manual</span></span>
+                  <span><i class="fas fa-tachometer-alt text-success me-1"></i> <span th:text="${car.mileage}">16 km/l</span></span>
+                  <span><i class="fas fa-suitcase text-warning me-1"></i> <span th:text="${car.luggageCapacity}">3</span> Bags</span>
+                </div>
+
+                <div class="mb-3 d-flex flex-wrap gap-1">
+                  <span th:each="feat, stat : ${car.features}" th:if="${stat.index < 3}" class="car-feature-pill">
+                    <i class="fas fa-check-circle text-primary"></i> <span th:text="${feat}">Feature</span>
+                  </span>
+                </div>
+
+                <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
+                  <div>
+                    <div class="price-tag">₹<span th:text="${#numbers.formatDecimal(car.pricePerDay, 0, 'COMMA', 0, 'POINT')}">2,500</span> <span>/day</span></div>
+                    <div class="small text-muted">Reg: <span class="fw-semibold text-dark" th:text="${car.registrationNumber}">TS 09 AB 1234</span></div>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <a th:href="@{'/car/' + ${car.id}}" class="btn btn-outline-secondary btn-sm px-3" title="Specs">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a th:href="@{'/book/' + ${car.id}}" class="btn btn-primary px-3 fw-bold">
+                      Book Now <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4 mt-5">
+    <div class="container text-center small text-secondary">
+      &copy; 2026 Lakshmi Narayana Travels. All Rights Reserved. Clean light-themed Car Rental Platform.
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script th:src="@{/js/customer-script.js}"></script>
+</body>
+</html>
+

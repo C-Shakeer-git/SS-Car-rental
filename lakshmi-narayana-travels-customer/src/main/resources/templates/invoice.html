@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="'Tax Invoice - ' + ${booking.invoiceNumber} + ' | Lakshmi Narayana Travels'"></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/customer-style.css}">
+</head>
+<body class="bg-light">
+
+  <!-- Top bar with actions -->
+  <div class="no-print bg-white py-3 border-bottom shadow-sm sticky-top">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-3">
+        <a th:href="@{/}" class="text-decoration-none d-flex align-items-center gap-2 text-dark">
+          <div class="brand-badge bg-primary text-white" style="width: 36px; height: 36px;"><i class="fas fa-car-side"></i></div>
+          <span class="fw-bold">Lakshmi Narayana Travels</span>
+        </a>
+      </div>
+      <div class="d-flex gap-2">
+        <button onclick="window.print()" class="btn btn-primary fw-bold px-3">
+          <i class="fas fa-print me-1"></i> Print / Save as PDF
+        </button>
+        <a th:href="@{/my-bookings}" class="btn btn-outline-secondary fw-bold px-3">
+          <i class="fas fa-calendar-check me-1"></i> My Bookings
+        </a>
+        <a th:href="@{/}" class="btn btn-outline-primary fw-bold px-3">
+          <i class="fas fa-home me-1"></i> Home
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-4">
+    <div class="card p-4 p-md-5 border-0 shadow-lg rounded-4 invoice-card bg-white mx-auto" style="max-width: 850px;">
+      <!-- Invoice Header -->
+      <div class="row align-items-start mb-4 pb-3 border-bottom">
+        <div class="col-sm-7">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="brand-badge bg-primary text-white" style="width: 48px; height: 48px;">
+              <i class="fas fa-car-side fa-lg"></i>
+            </div>
+            <div>
+              <h4 class="fw-bold mb-0 text-navy">LAKSHMI NARAYANA TRAVELS</h4>
+              <div class="small text-muted fw-semibold">PREMIUM CAR RENTALS &bull; OUTSTATION SERVICES</div>
+            </div>
+          </div>
+          <div class="small text-muted">
+            <div>108 Temple Road, Madhapur, Hitec City, Hyderabad - 500081</div>
+            <div>GSTIN: <span class="fw-bold text-dark">36AAACL8901M1ZT</span> &bull; State: Telangana (36)</div>
+            <div>Phone: +91 98480 22338 &bull; Email: accounts@lntravels.com</div>
+          </div>
+        </div>
+
+        <div class="col-sm-5 text-sm-end mt-3 mt-sm-0">
+          <div class="invoice-badge-paid mb-2">
+            <i class="fas fa-check-circle me-1"></i> <span th:text="${booking.paymentStatus}">PAID</span>
+          </div>
+          <h5 class="fw-bold text-primary mb-1" th:text="${booking.invoiceNumber}">INV-LNT-2026-101</h5>
+          <div class="small text-muted">Date: <span class="fw-semibold text-dark" th:text="${booking.createdAt != null ? booking.createdAt.substring(0, 10) : '2026-03-09'}">2026-03-09</span></div>
+          <div class="small text-muted">Booking ID: <span class="fw-bold text-dark" th:text="${booking.id}">LNT-BK-2026-101</span></div>
+        </div>
+      </div>
+
+      <!-- Billed to & Trip Info -->
+      <div class="row g-4 mb-4">
+        <div class="col-sm-6">
+          <div class="p-3 bg-light rounded-3 h-100">
+            <h6 class="fw-bold small text-uppercase text-muted mb-2"><i class="fas fa-user text-primary me-1"></i> Billed To Customer:</h6>
+            <div class="fw-bold text-dark" th:text="${booking.customerName}">Rahul Varma</div>
+            <div class="small text-muted" th:text="'Email: ' + ${booking.customerEmail}">rahul@example.com</div>
+            <div class="small text-muted" th:text="'Phone: ' + ${booking.customerPhone}">+91 98480 22338</div>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="p-3 bg-light rounded-3 h-100">
+            <h6 class="fw-bold small text-uppercase text-muted mb-2"><i class="fas fa-route text-success me-1"></i> Journey Schedule:</h6>
+            <div class="small mb-1"><strong>Vehicle:</strong> <span th:text="${booking.carName}">Toyota Innova Crysta</span></div>
+            <div class="small mb-1"><strong>Pickup:</strong> <span th:text="${booking.pickupLocation} + ' (' + ${booking.pickupDate} + ' ' + ${booking.pickupTime} + ')'">Hyd Airport</span></div>
+            <div class="small"><strong>Drop-off:</strong> <span th:text="${booking.dropLocation} + ' (' + ${booking.dropDate} + ' ' + ${booking.dropTime} + ')'">Vijayawada Hub</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Itemized Table -->
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle mb-0">
+          <thead class="table-light">
+            <tr class="small text-uppercase text-muted">
+              <th>Description</th>
+              <th class="text-center" style="width: 15%;">Duration / Qty</th>
+              <th class="text-end" style="width: 20%;">Rate (INR)</th>
+              <th class="text-end" style="width: 20%;">Amount (INR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="fw-bold" th:text="${booking.carName} + ' - Base Rental Fare'">Toyota Innova Crysta</div>
+                <div class="small text-muted">Self-drive rental with unlimited kilometers</div>
+              </td>
+              <td class="text-center fw-semibold"><span th:text="${booking.totalDays}">3</span> Days</td>
+              <td class="text-end">₹<span th:text="${#numbers.formatDecimal(booking.dailyRate, 0, 'COMMA', 2, 'POINT')}">3,200.00</span></td>
+              <td class="text-end fw-semibold">₹<span th:text="${#numbers.formatDecimal(booking.baseAmount, 0, 'COMMA', 2, 'POINT')}">9,600.00</span></td>
+            </tr>
+
+            <!-- Add-ons -->
+            <tr th:each="addon : ${booking.selectedFeatures}">
+              <td>
+                <div class="fw-semibold text-primary"><i class="fas fa-plus-circle me-1"></i> <span th:text="${addon}">GPS Navigation</span></div>
+                <div class="small text-muted">Specialized travel enhancement</div>
+              </td>
+              <td class="text-center text-muted">Included</td>
+              <td class="text-end text-muted">-</td>
+              <td class="text-end fw-semibold">Included in Add-on</td>
+            </tr>
+
+            <tr th:if="${booking.addOnAmount > 0}">
+              <td colspan="3" class="text-end fw-bold">Total Add-on Enhancements:</td>
+              <td class="text-end fw-semibold">₹<span th:text="${#numbers.formatDecimal(booking.addOnAmount, 0, 'COMMA', 2, 'POINT')}">2,097.00</span></td>
+            </tr>
+
+            <tr>
+              <td colspan="3" class="text-end fw-bold">Taxable Subtotal:</td>
+              <td class="text-end fw-semibold">₹<span th:text="${#numbers.formatDecimal(booking.baseAmount + booking.addOnAmount, 0, 'COMMA', 2, 'POINT')}">11,697.00</span></td>
+            </tr>
+
+            <tr>
+              <td colspan="3" class="text-end text-muted small">CGST (9%):</td>
+              <td class="text-end small">₹<span th:text="${#numbers.formatDecimal(booking.gstAmount / 2.0, 0, 'COMMA', 2, 'POINT')}">1,052.73</span></td>
+            </tr>
+            <tr>
+              <td colspan="3" class="text-end text-muted small">SGST (9%):</td>
+              <td class="text-end small">₹<span th:text="${#numbers.formatDecimal(booking.gstAmount / 2.0, 0, 'COMMA', 2, 'POINT')}">1,052.73</span></td>
+            </tr>
+
+            <tr class="table-primary fw-bold">
+              <td colspan="3" class="text-end h5 mb-0">Total Invoice Amount:</td>
+              <td class="text-end h5 mb-0 text-primary">₹<span th:text="${#numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 2, 'POINT')}">13,802.46</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Payment & Auth details -->
+      <div class="row align-items-center pt-3 border-top">
+        <div class="col-sm-7">
+          <div class="small">
+            <div><strong>Payment Mode:</strong> <span th:text="${booking.paymentMethod}">UPI (Google Pay)</span></div>
+            <div><strong>Transaction Reference:</strong> <span class="font-monospace text-dark" th:text="${booking.transactionId}">UPI/308129482910/LNT</span></div>
+            <div class="text-success mt-1"><i class="fas fa-check-circle"></i> Payment verified &amp; confirmed.</div>
+          </div>
+        </div>
+        <div class="col-sm-5 text-sm-end mt-3 mt-sm-0">
+          <div class="text-muted small">Authorized Signatory</div>
+          <div class="fw-bold text-dark mt-2">Lakshmi Narayana Travels</div>
+          <div class="small text-muted font-monospace" style="font-size: 0.7rem;">Digitally Signed &bull; Computer Generated</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

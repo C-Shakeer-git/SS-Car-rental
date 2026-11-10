@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Bookings | Lakshmi Narayana Travels</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/customer-style.css}">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg lnt-navbar sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-3" th:href="@{/}">
+        <div class="brand-badge"><i class="fas fa-car-side fa-lg"></i></div>
+        <div>
+          <div class="brand-title">LAKSHMI NARAYANA</div>
+          <div class="brand-subtitle">TRAVELS &bull; CAR RENTALS</div>
+        </div>
+      </a>
+      <div class="collapse navbar-collapse" id="navContent">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold">
+          <li class="nav-item"><a class="nav-link" th:href="@{/}"><i class="fas fa-home me-1"></i> Home</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/cars}"><i class="fas fa-car me-1"></i> Fleet &amp; Cars</a></li>
+          <li class="nav-item"><a class="nav-link active text-primary" th:href="@{/my-bookings}"><i class="fas fa-calendar-check me-1"></i> My Bookings</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-2">
+          <div th:if="${session.customer != null}" class="d-flex gap-2">
+            <a th:href="@{/profile}" class="btn btn-outline-primary fw-bold"><i class="fas fa-id-card me-1"></i> Profile</a>
+            <a th:href="@{/logout}" class="btn btn-outline-danger fw-bold"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+          </div>
+          <div th:if="${session.customer == null}" class="d-flex gap-2">
+            <a th:href="@{/login}" class="btn btn-outline-primary fw-bold">Login</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Alerts -->
+  <div class="container mt-3" th:if="${infoMessage}">
+    <div class="alert alert-info alert-dismissible fade show shadow-sm" role="alert">
+      <i class="fas fa-info-circle me-2"></i> <span th:text="${infoMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  </div>
+
+  <div class="bg-light py-4 border-bottom">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <h2 class="fw-bold mb-1">My Rental Bookings</h2>
+          <div class="text-muted small">Track your active trips, download tax invoices, and manage upcoming schedules.</div>
+        </div>
+        <div>
+          <a th:href="@{/cars}" class="btn btn-primary fw-bold"><i class="fas fa-plus me-1"></i> Book New Car</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-5">
+    <!-- Lookup bar if user not logged in -->
+    <div th:if="${session.customer == null}" class="card p-3 border-0 shadow-sm rounded-4 mb-4 bg-white">
+      <form th:action="@{/my-bookings}" method="get" class="row g-2 align-items-center">
+        <div class="col-md-9">
+          <div class="input-group">
+            <span class="input-group-text bg-light"><i class="fas fa-envelope text-primary"></i></span>
+            <input type="email" name="searchEmail" class="form-control" placeholder="Search bookings by your email address..." th:value="${searchEmail}">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-primary w-100 fw-bold">Find My Reservations</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Empty state -->
+    <div th:if="${bookings.isEmpty()}" class="card p-5 border-0 shadow-sm rounded-4 text-center bg-white">
+      <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+      <h4 class="fw-bold">No Bookings Found</h4>
+      <p class="text-muted">You haven't made any car reservations yet or none match your search.</p>
+      <div>
+        <a th:href="@{/cars}" class="btn btn-primary px-4 fw-bold">Browse Available Fleet</a>
+      </div>
+    </div>
+
+    <!-- Bookings List -->
+    <div class="row g-4" th:if="${!bookings.isEmpty()}">
+      <div th:each="b : ${bookings}" class="col-lg-6">
+        <div class="card p-4 border-0 shadow-sm rounded-4 h-100 bg-white">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <span class="badge bg-light text-primary border fw-bold font-monospace" th:text="${b.id}">LNT-BK-2026-101</span>
+              <h5 class="fw-bold mt-1 mb-0" th:text="${b.carName}">Toyota Innova Crysta</h5>
+            </div>
+            <span class="badge px-3 py-2"
+                  th:classappend="${b.status == 'APPROVED' ? 'bg-success' : (b.status == 'PENDING' ? 'bg-warning text-dark' : (b.status == 'CANCELLED' ? 'bg-danger' : 'bg-secondary'))}"
+                  th:text="${b.status}">APPROVED</span>
+          </div>
+
+          <div class="row g-3 align-items-center mb-3">
+            <div class="col-sm-4 text-center">
+              <img th:src="${b.carImageUrl}" th:alt="${b.carName}" class="img-fluid rounded-3 shadow-sm" style="max-height: 100px; width: 100%; object-fit: cover;">
+            </div>
+            <div class="col-sm-8 small">
+              <div class="mb-1"><strong>Dates:</strong> <span th:text="${b.pickupDate}">2026-03-12</span> to <span th:text="${b.dropDate}">2026-03-15</span> (<span th:text="${b.totalDays}">3</span> Days)</div>
+              <div class="mb-1"><strong>Route:</strong> <span th:text="${b.pickupLocation}">Airport</span> &rarr; <span th:text="${b.dropLocation}">Station</span></div>
+              <div class="mb-1"><strong>Payment:</strong> <span class="badge bg-success-subtle text-success border border-success" th:text="${b.paymentStatus}">PAID</span> via <span th:text="${b.paymentMethod}">UPI</span></div>
+              <div><strong>Total Paid:</strong> <span class="fw-bold text-primary">₹<span th:text="${#numbers.formatDecimal(b.totalAmount, 0, 'COMMA', 2, 'POINT')}">13,802.46</span></span></div>
+            </div>
+          </div>
+
+          <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <a th:href="@{'/invoice/' + ${b.id}}" class="btn btn-outline-primary btn-sm fw-bold">
+              <i class="fas fa-file-invoice text-primary me-1"></i> View Tax Invoice
+            </a>
+
+            <div th:if="${b.status != 'CANCELLED' and b.status != 'COMPLETED'}">
+              <form th:action="@{'/booking/cancel/' + ${b.id}}" method="post" onsubmit="return confirm('Are you sure you want to cancel this booking?');" class="d-inline">
+                <button type="submit" class="btn btn-outline-danger btn-sm fw-bold">
+                  <i class="fas fa-times me-1"></i> Cancel
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-dark text-white py-4 mt-5 text-center small text-secondary">
+    &copy; 2026 Lakshmi Narayana Travels. All Rights Reserved.
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Car | Lakshmi Narayana Travels</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/customer-style.css}">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg lnt-navbar sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-3" th:href="@{/}">
+        <div class="brand-badge"><i class="fas fa-car-side fa-lg"></i></div>
+        <div>
+          <div class="brand-title">LAKSHMI NARAYANA</div>
+          <div class="brand-subtitle">TRAVELS &bull; CAR RENTALS</div>
+        </div>
+      </a>
+      <div class="d-flex align-items-center gap-2">
+        <a th:href="@{/cars}" class="btn btn-outline-primary fw-bold"><i class="fas fa-times me-1"></i> Cancel Booking</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="bg-light py-4 border-bottom">
+    <div class="container">
+      <h2 class="fw-bold mb-1">Confirm Your Reservation</h2>
+      <div class="text-muted small">Choose your dates, travel route, and optional travel enhancements.</div>
+    </div>
+  </div>
+
+  <div class="container py-5">
+    <form th:action="@{/book/create}" method="post" id="bookingForm">
+      <input type="hidden" name="carId" th:value="${car.id}">
+
+      <div class="row g-4">
+        <!-- Left: Form details -->
+        <div class="col-lg-8">
+          <!-- Step 1: Customer Contact -->
+          <div class="card p-4 border-0 shadow-sm rounded-4 mb-4">
+            <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+              <span class="badge bg-primary rounded-circle px-2 py-1">1</span>
+              <span>Customer &amp; Driver Details</span>
+            </h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Full Name (as per Driving License) *</label>
+                <input type="text" class="form-control" name="customerName" required
+                       th:value="${customer != null ? customer.fullName : ''}" placeholder="e.g. Rahul Varma">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Email Address (for Invoices &amp; Confirmation) *</label>
+                <input type="email" class="form-control" name="customerEmail" required
+                       th:value="${customer != null ? customer.email : ''}" placeholder="e.g. rahul@example.com">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">WhatsApp / Mobile Number *</label>
+                <input type="tel" class="form-control" name="customerPhone" required
+                       th:value="${customer != null ? customer.phone : ''}" placeholder="e.g. +91 98480 22338">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Identity Verification Notice</label>
+                <div class="small text-muted p-2 bg-light rounded border">
+                  <i class="fas fa-id-card text-primary me-1"></i> Aadhaar &amp; Driving License can be submitted in your <a th:href="@{/profile}" target="_blank">Profile</a> or presented at handover.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Trip Dates & Locations -->
+          <div class="card p-4 border-0 shadow-sm rounded-4 mb-4">
+            <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+              <span class="badge bg-primary rounded-circle px-2 py-1">2</span>
+              <span>Pickup &amp; Return Itinerary</span>
+            </h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Pickup Location *</label>
+                <select class="form-select" name="pickupLocation" required>
+                  <option value="Hyderabad RGIA Airport (HYD) Terminal">Hyderabad RGIA Airport (HYD) Terminal</option>
+                  <option value="Gachibowli Tech Hub, Hyderabad">Gachibowli Tech Hub, Hyderabad</option>
+                  <option value="Secunderabad Railway Station Hub">Secunderabad Railway Station Hub</option>
+                  <option value="Vijayawada Bus Terminal &amp; Railway Hub">Vijayawada Bus Terminal &amp; Railway Hub</option>
+                  <option value="Bengaluru Airport Terminal 1 Hub">Bengaluru Airport Terminal 1 Hub</option>
+                  <option value="Doorstep Delivery (Home / Hotel)">Doorstep Delivery (Home / Hotel)</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Drop-off Location *</label>
+                <select class="form-select" name="dropLocation" required>
+                  <option value="Same as Pickup Location">Same as Pickup Location</option>
+                  <option value="Hyderabad RGIA Airport (HYD) Terminal">Hyderabad RGIA Airport (HYD) Terminal</option>
+                  <option value="Gachibowli Tech Hub, Hyderabad">Gachibowli Tech Hub, Hyderabad</option>
+                  <option value="Vijayawada Bus Terminal &amp; Railway Hub">Vijayawada Bus Terminal &amp; Railway Hub</option>
+                  <option value="Bengaluru Airport Terminal 1 Hub">Bengaluru Airport Terminal 1 Hub</option>
+                  <option value="Doorstep Pickup (Home / Hotel)">Doorstep Pickup (Home / Hotel)</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small fw-bold text-muted">Pickup Date *</label>
+                <input type="date" class="form-control" name="pickupDate" id="bookPickupDate" required th:value="${todayDate}">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small fw-bold text-muted">Pickup Time</label>
+                <input type="time" class="form-control" name="pickupTime" value="09:00">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small fw-bold text-muted">Return Date *</label>
+                <input type="date" class="form-control" name="dropDate" id="bookDropDate" required th:value="${tomorrowDate}">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small fw-bold text-muted">Return Time</label>
+                <input type="time" class="form-control" name="dropTime" value="18:00">
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Add-on Features & Equipment -->
+          <div class="card p-4 border-0 shadow-sm rounded-4 mb-4">
+            <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+              <span class="badge bg-primary rounded-circle px-2 py-1">3</span>
+              <span>Select Journey Add-Ons &amp; Features</span>
+            </h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="border rounded-3 p-3 h-100 d-flex align-items-start gap-3 bg-light">
+                  <input class="form-check-input mt-1 addon-checkbox" type="checkbox" name="addOns" value="GPS Navigation" id="addonGPS" data-daily="200" data-flat="0">
+                  <label class="form-check-label w-100" for="addonGPS">
+                    <div class="fw-bold"><i class="fas fa-map-marked-alt text-primary me-1"></i> Live GPS Navigation Device</div>
+                    <div class="text-muted small">Turn-by-turn guidance with live traffic &amp; speed warnings</div>
+                    <div class="text-primary fw-bold mt-1 small">+₹200 / day</div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="border rounded-3 p-3 h-100 d-flex align-items-start gap-3 bg-light">
+                  <input class="form-check-input mt-1 addon-checkbox" type="checkbox" name="addOns" value="Child Safety Seat" id="addonChild" data-daily="150" data-flat="0">
+                  <label class="form-check-label w-100" for="addonChild">
+                    <div class="fw-bold"><i class="fas fa-baby text-warning me-1"></i> ISOFIX Child Safety Seat</div>
+                    <div class="text-muted small">Certified booster seat for infants &amp; toddlers up to 4 yrs</div>
+                    <div class="text-primary fw-bold mt-1 small">+₹150 / day</div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="border rounded-3 p-3 h-100 d-flex align-items-start gap-3 bg-light">
+                  <input class="form-check-input mt-1 addon-checkbox" type="checkbox" name="addOns" value="Insurance Zero-Dep" id="addonIns" data-daily="499" data-flat="0" checked>
+                  <label class="form-check-label w-100" for="addonIns">
+                    <div class="fw-bold"><i class="fas fa-shield-alt text-success me-1"></i> Zero-Dep Bumper-to-Bumper Insurance</div>
+                    <div class="text-muted small">Zero liability for accidental scratches or minor damages</div>
+                    <div class="text-primary fw-bold mt-1 small">+₹499 / day</div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="border rounded-3 p-3 h-100 d-flex align-items-start gap-3 bg-light">
+                  <input class="form-check-input mt-1 addon-checkbox" type="checkbox" name="addOns" value="Fastag Pass" id="addonFastag" data-daily="0" data-flat="500">
+                  <label class="form-check-label w-100" for="addonFastag">
+                    <div class="fw-bold"><i class="fas fa-broadcast-tower text-info me-1"></i> Fastag Highway Auto-Refill</div>
+                    <div class="text-muted small">Preloaded highway toll balance; unspent balance refunded</div>
+                    <div class="text-primary fw-bold mt-1 small">+₹500 refundable deposit</div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Summary & Price breakdown -->
+        <div class="col-lg-4">
+          <div class="card p-4 border-0 shadow-md rounded-4 sticky-top" style="top: 90px;">
+            <h5 class="fw-bold mb-3 border-bottom pb-2">Booking Summary</h5>
+
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <img th:src="${car.imageUrl}" th:alt="${car.name}" class="rounded-3 shadow-sm" style="width: 90px; height: 60px; object-fit: cover;">
+              <div>
+                <h6 class="fw-bold mb-0" th:text="${car.name}">Toyota Innova Crysta</h6>
+                <div class="small text-muted"><span th:text="${car.seaters}">7</span> Seater &bull; <span th:text="${car.fuelType}">Diesel</span></div>
+                <div class="small text-primary fw-bold">₹<span id="ratePerDay" th:text="${car.pricePerDay}">3200</span> / day</div>
+              </div>
+            </div>
+
+            <div class="py-2 border-top border-bottom my-2 small">
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Total Duration:</span>
+                <span class="fw-bold"><span id="summaryDays">2</span> Days</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Base Rental:</span>
+                <span class="fw-semibold">₹<span id="summaryBaseFare">6,400</span></span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Add-ons &amp; Insurance:</span>
+                <span class="fw-semibold">₹<span id="summaryAddons">998</span></span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">GST (18%):</span>
+                <span class="fw-semibold">₹<span id="summaryGst">1,331.64</span></span>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center my-3">
+              <span class="h6 fw-bold mb-0">Total Payable:</span>
+              <span class="h4 fw-bold text-primary mb-0">₹<span id="summaryGrandTotal">8,729.64</span></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
+              <i class="fas fa-lock"></i> Proceed to Payment
+            </button>
+
+            <div class="text-center small text-muted mt-3">
+              <i class="fas fa-shield-alt text-success me-1"></i> 100% Encrypted &bull; Instant Confirmation
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <footer class="bg-dark text-white py-4 mt-5 text-center small text-secondary">
+    &copy; 2026 Lakshmi Narayana Travels. All Rights Reserved.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Live Calculation Logic
+    function recalculateFare() {
+      const pDate = new Date(document.getElementById('bookPickupDate').value);
+      const dDate = new Date(document.getElementById('bookDropDate').value);
+      const ratePerDay = parseFloat(document.getElementById('ratePerDay').innerText);
+
+      let diffTime = dDate - pDate;
+      let days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      if (isNaN(days) || days <= 0) days = 1;
+
+      document.getElementById('summaryDays').innerText = days;
+
+      let baseFare = ratePerDay * days;
+      document.getElementById('summaryBaseFare').innerText = baseFare.toLocaleString('en-IN');
+
+      let addonTotal = 0;
+      document.querySelectorAll('.addon-checkbox:checked').forEach(cb => {
+        let daily = parseFloat(cb.getAttribute('data-daily')) || 0;
+        let flat = parseFloat(cb.getAttribute('data-flat')) || 0;
+        addonTotal += (daily * days) + flat;
+      });
+
+      document.getElementById('summaryAddons').innerText = addonTotal.toLocaleString('en-IN');
+
+      let subtotal = baseFare + addonTotal;
+      let gst = Math.round(subtotal * 0.18 * 100) / 100;
+      let grandTotal = Math.round((subtotal + gst) * 100) / 100;
+
+      document.getElementById('summaryGst').innerText = gst.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('summaryGrandTotal').innerText = grandTotal.toLocaleString('en-IN', {minimumFractionDigits: 2});
+    }
+
+    document.getElementById('bookPickupDate').addEventListener('change', recalculateFare);
+    document.getElementById('bookDropDate').addEventListener('change', recalculateFare);
+    document.querySelectorAll('.addon-checkbox').forEach(cb => cb.addEventListener('change', recalculateFare));
+    window.addEventListener('load', recalculateFare);
+  </script>
+</body>
+</html>
+
